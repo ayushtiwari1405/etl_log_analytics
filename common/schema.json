@@ -1,0 +1,17 @@
+{
+"fields": [
+{ "name": "host", "type": "string" },
+{ "name": "timestamp", "type": "string" },
+{ "name": "log_date", "type": "string", "format": "YYYY-MM-DD" },
+{ "name": "log_hour", "type": "string", "format": "HH" },
+{ "name": "method", "type": "string" },
+{ "name": "resource_path", "type": "string" },
+{ "name": "protocol", "type": "string" },
+{ "name": "status_code", "type": "integer" },
+{ "name": "bytes", "type": "integer" }
+],
+"constraints": {
+"bytes_missing_value": 0,
+"malformed_policy": "count_not_drop"
+}
+}

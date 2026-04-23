@@ -1,0 +1,28 @@
+dataset:
+  raw_log_dir: "data/raw/"
+  files:
+    - "NASA_access_log_Jul95"
+    - "NASA_access_log_Aug95"
+
+batch:
+  size: 10000
+
+database:
+  type: "postgres"
+  host: "localhost"
+  port: 5432
+  name: "etl_logs"
+  user: "postgres"
+  password: ""
+
+execution:
+  output_dir: "results/outputs/"
+  log_dir: "results/logs/"
+  run_id_prefix: "run"
+
+pipelines:
+  available:
+    - mongo
+    - hive
+    - pig
+    - mapreduce
