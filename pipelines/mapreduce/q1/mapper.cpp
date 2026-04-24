@@ -9,10 +9,15 @@ signed main() {
     string line;
     regex pattern(R"(^(\S+) \S+ \S+ \[([^\]]+)\] \"([^\"]*)\" (\d{3}) (\S+))");
 
+    int malformed = 0;
+
     while(getline(cin, line)) {
         smatch match;
 
-        if(!regex_search(line, match, pattern)) continue;
+        if(!regex_search(line, match, pattern)) {
+            malformed++;
+            continue;
+        }
 
         string timestamp = match[2];
         int status = stoll(match[4]);
@@ -36,6 +41,9 @@ signed main() {
 
         cout << log_date << "|" << status << "\t" << bytes << "\n";
     }
+
+    // print malformed count to stderr
+    cerr << "Malformed Count: " << malformed << "\n";
 
     return 0;
 }
