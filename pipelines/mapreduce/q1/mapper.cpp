@@ -38,12 +38,9 @@ signed main() {
         string yyyy = date.substr(7,4);
 
         string log_date = yyyy + "-" + month_map[mon] + "-" + dd;
-
         cout << log_date << "|" << status << "\t" << bytes << "\n";
     }
 
-    // print malformed count to stderr
     cerr << "Malformed Count: " << malformed << "\n";
-
     return 0;
 }

@@ -4,11 +4,12 @@ import subprocess
 from sql.load_results import load_results_to_db
 
 def run_mapreduce_batch(config, query, input_choice):
+
     if input_choice == "sample":
         input_files = ["data/sample/sample.log"]
 
     elif input_choice == "jul":
-            input_files = ["data/raw/NASA_access_log_Jul95"]
+        input_files = ["data/raw/NASA_access_log_Jul95"]
 
     elif input_choice == "aug":
         input_files = ["data/raw/NASA_access_log_Aug95"]
@@ -24,21 +25,17 @@ def run_mapreduce_batch(config, query, input_choice):
     os.makedirs("results/logs", exist_ok=True)
     os.makedirs("results/outputs", exist_ok=True)
 
+    last_summary = None 
+
     for file_path in input_files:
 
         print(f"\n=== Processing File: {file_path} ===")
 
-        # -------------------------
-        # READ INPUT
-        # -------------------------
         with open(file_path, "r") as f:
             lines = f.readlines()
 
         total_records = len(lines)
-        batches = []
-
-        for i in range(0, total_records, batch_size):
-            batches.append(lines[i:i+batch_size])
+        batches = [lines[i:i+batch_size] for i in range(0, total_records, batch_size)]
 
         run_id = str(int(time.time()))
         total_start = time.time()
@@ -55,14 +52,10 @@ def run_mapreduce_batch(config, query, input_choice):
             with open(batch_file, "w") as bf:
                 bf.writelines(batch)
 
-            start = time.time()
-
             subprocess.run(
                 ["bash", "pipelines/mapreduce/driver.sh", query, batch_file, output_file],
                 check=True
             )
-
-            end = time.time()
 
             temp_outputs.append(output_file)
 
@@ -78,7 +71,7 @@ def run_mapreduce_batch(config, query, input_choice):
                     fout.writelines(fin.readlines())
 
         # -------------------------
-        # FINAL REDUCE (ONLY FOR Q1)
+        # FINAL REDUCE
         # -------------------------
         base = f"pipelines/mapreduce/{query}"
         reducer_exec = f"{base}/reducer"
@@ -109,11 +102,14 @@ def run_mapreduce_batch(config, query, input_choice):
         total_end = time.time()
 
         # -------------------------
-        # FILE SUMMARY (THIS IS WHAT YOU WANTED)
+        # STORE SUMMARY (DO NOT PRINT HERE)
         # -------------------------
-        print("\n--- FILE SUMMARY ---")
-        print(f"Query: {query}")
-        print(f"File: {file_path}")
-        print(f"Records: {total_records}")
-        print(f"Batches: {len(batches)}")
-        print(f"Runtime: {total_end - total_start:.4f}s")
+        last_summary = {
+            "pipeline": "mapreduce",
+            "file": file_path,
+            "records": total_records,
+            "batches": len(batches),
+            "runtime": total_end - total_start
+        }
+
+    return last_summary 

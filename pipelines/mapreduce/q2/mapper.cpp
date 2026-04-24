@@ -38,7 +38,11 @@ signed main() {
 
         string resource = parts[1];
 
-        cout << resource << "\t" << bytes << "|" << host << "\n";
+        // bytes stream
+        cout << resource << "\tB|" << bytes << "\n";
+
+        // host stream
+        cout << resource << "\tH|" << host << "\n";
     }
 
     cerr << "Malformed Count: " << malformed << "\n";

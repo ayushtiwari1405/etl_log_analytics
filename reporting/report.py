@@ -13,13 +13,32 @@ def show_report(config, query):
 
     cur.execute(
         """
-        SELECT run_id, key, value1, value2, value3, created_at
+        SELECT run_id
         FROM etl_results
         WHERE query_name = %s
         ORDER BY created_at DESC
-        LIMIT 50
+        LIMIT 1
         """,
         (query,)
+    )
+
+    result = cur.fetchone()
+
+    if not result:
+        print("\n=== REPORT ===\n")
+        print("No data found.")
+        return
+
+    latest_run_id = result[0]
+
+    cur.execute(
+        """
+        SELECT run_id, key, value1, value2, value3, created_at
+        FROM etl_results
+        WHERE query_name = %s AND run_id = %s
+        ORDER BY key
+        """,
+        (query, latest_run_id)
     )
 
     rows = cur.fetchall()
@@ -28,7 +47,6 @@ def show_report(config, query):
 
     for row in rows:
         run_id, key, v1, v2, v3, ts = row
-
         print(f"[Run: {run_id}] {key} | {v1} | {v2} | {v3} | {ts}")
 
     cur.close()

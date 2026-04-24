@@ -2,7 +2,10 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 from rich.prompt import Prompt
+from rich.status import Status
 import os
+import subprocess
+import time
 
 console = Console()
 
@@ -15,11 +18,34 @@ INPUT_OPTIONS = {
 
 PIPELINES = ["mapreduce", "mongo", "hive", "pig"]
 
-
 def run_command(cmd):
     console.print(f"\n[bold yellow]Running:[/bold yellow] {cmd}\n")
-    os.system(cmd)
-    console.print("\n[bold green]✔ Done[/bold green]\n")
+
+    os.makedirs("results/logs", exist_ok=True)
+    log_file = f"results/logs/ui_exec_{int(time.time())}.log"
+
+    result = subprocess.run(
+        cmd,
+        shell=True,
+        capture_output=True,   
+        text=True
+    )
+
+    # Save logs
+    with open(log_file, "w") as log:
+        log.write(result.stdout)
+        log.write(result.stderr)
+
+    if result.stdout:
+        console.print(result.stdout)
+
+    if result.stderr:
+        console.print(f"[red]{result.stderr}[/red]")
+
+    if result.returncode == 0:
+        console.print(f"[bold green]✔ Done[/bold green] [dim](logs: {log_file})[/dim]\n")
+    else:
+        console.print(f"[bold red]✖ Failed[/bold red] [dim](check {log_file})[/dim]\n")
 
 
 def run_multiple(commands):
@@ -29,7 +55,6 @@ def run_multiple(commands):
 
 def show_input_menu():
     table = Table(title="Select Input Dataset", show_lines=True)
-
     table.add_column("Option", style="cyan", justify="center")
     table.add_column("Dataset", style="magenta")
 
@@ -43,7 +68,6 @@ def show_input_menu():
 
 def show_pipeline_menu():
     table = Table(title="Select Pipeline", show_lines=True)
-
     table.add_column("Option", style="cyan", justify="center")
     table.add_column("Pipeline", style="magenta")
 
@@ -51,7 +75,6 @@ def show_pipeline_menu():
         table.add_row(str(i), p)
 
     table.add_row("0", "Exit")
-
     console.print(table)
 
 
