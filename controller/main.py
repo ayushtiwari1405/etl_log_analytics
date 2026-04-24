@@ -15,6 +15,7 @@ def main():
     parser.add_argument("--query", required=True, help="q1 |q2 |q3")
     parser.add_argument("--batch_size", type=int, help="override batch size")
     parser.add_argument("--report", action="store_true")
+    parser.add_argument("--input", default="sample")
 
     args = parser.parse_args()
 
@@ -29,7 +30,7 @@ def main():
     db_password = os.getenv("DB_PASSWORD")
     config["database"]["password"] = db_password
 
-    run_pipeline(args.pipeline, config, args.query)
+    run_pipeline(args.pipeline, config, args.query, args.input)
     if args.report:
 	    show_report(config, args.query)
 

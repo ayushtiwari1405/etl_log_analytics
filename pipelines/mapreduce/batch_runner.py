@@ -3,11 +3,21 @@ import time
 import subprocess
 from sql.load_results import load_results_to_db
 
-def run_mapreduce_batch(config, query):
-    input_files = [
-        "data/raw/NASA_access_log_Jul95",
-        "data/raw/NASA_access_log_Aug95"
-    ]
+def run_mapreduce_batch(config, query, input_choice):
+    if input_choice == "sample":
+        input_files = ["data/sample/sample.log"]
+
+    elif input_choice == "jul":
+            input_files = ["data/raw/NASA_access_log_Jul95"]
+
+    elif input_choice == "aug":
+        input_files = ["data/raw/NASA_access_log_Aug95"]
+
+    elif input_choice == "both":
+        input_files = [
+            "data/raw/NASA_access_log_Jul95",
+            "data/raw/NASA_access_log_Aug95"
+        ]
 
     batch_size = config["batch"]["size"]
 

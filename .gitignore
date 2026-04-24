@@ -1,19 +1,51 @@
+# -------------------------
 # Python
+# -------------------------
 __pycache__/
 *.pyc
-venv/
+*.pyo
+*.pyd
 
-# Environment
+# Virtual environment
+venv/
 .env
 
-# Results
-results/
+# -------------------------
+# System / OS
+# -------------------------
+.DS_Store
+Thumbs.db
 
-# Logs
+# -------------------------
+# Logs & Outputs (GENERATED)
+# -------------------------
+results/
 *.log
 
-# OS
-.DS_Store
+# -------------------------
+# Data (LARGE FILES - DO NOT COMMIT)
+# -------------------------
+data/raw/
 
-#Dataset
-data/
+
+# -------------------------
+# Temporary / Intermediate files
+# -------------------------
+*.out
+*.tmp
+
+# -------------------------
+# Build files (C++ binaries)
+# -------------------------
+pipelines/mapreduce/q1/mapper
+pipelines/mapreduce/q1/reducer
+pipelines/mapreduce/q2/mapper
+pipelines/mapreduce/q2/reducer
+pipelines/mapreduce/q3/mapper
+pipelines/mapreduce/q3/reducer
+
+# -------------------------
+# IDEs
+# -------------------------
+.vscode/
+.idea/

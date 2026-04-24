@@ -1,9 +1,9 @@
 import subprocess
 from pipelines.mapreduce.batch_runner import run_mapreduce_batch
 
-def run_pipeline(pipeline, config, query):
+def run_pipeline(pipeline, config, query, input_choice):
     if pipeline == "mapreduce":
-        run_mapreduce_batch(config, query)
+        run_mapreduce_batch(config, query, input_choice)
 
     elif pipeline == "mongo":
         print("Mongo pipeline not implemented yet")
