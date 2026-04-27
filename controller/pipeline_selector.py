@@ -9,7 +9,7 @@ def run_pipeline(pipeline, config, query, input_choice):
         return run_mapreduce_batch(config, query, input_choice)
 
     elif pipeline == "pig":
-        print("Pig pipeline not implemented yet.")
+        return run_pig_batch(config, query, input_choice)
 
     elif pipeline == "mongo":
         print("Mongo pipeline not implemented yet")
